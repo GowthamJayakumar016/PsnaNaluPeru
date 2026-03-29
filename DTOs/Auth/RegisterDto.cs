@@ -6,9 +6,13 @@ namespace Happy.DTOs.Auth
     {
         [Required]
         public string Name { get; set; }
+<<<<<<< HEAD
 
 
     [Required]
+=======
+        [Required]
+>>>>>>> d06a45075b50152851f83015625ddbc5ebc9a16d
         public string Email { get; set; }
 
         [Required]
@@ -18,5 +22,8 @@ namespace Happy.DTOs.Auth
         public string ConfirmPassword { get; set; }
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> d06a45075b50152851f83015625ddbc5ebc9a16d
 }
