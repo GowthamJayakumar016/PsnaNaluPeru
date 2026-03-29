@@ -1,0 +1,72 @@
+﻿# ========================
+# .NET / ASP.NET Core
+# ========================
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ========================
+# Entity Framework Migrations (optional)
+# Uncomment if you don't want to track migrations
+# ========================
+# Migrations/
+
+# ========================
+# Publish Output
+# ========================
+**/publish/
+**/PublishProfiles/
+
+# ========================
+# App Settings (sensitive)
+# ========================
+appsettings.Development.json
+# appsettings.json  ← keep this commented; you usually DO want to track it
+
+# ========================
+# Visual Studio
+# ========================
+.vs/
+*.rsuser
+*.vsp
+*.vspx
+TestResults/
+*.VC.db
+*.VC.opendb
+
+# ========================
+# VS Code
+# ========================
+.vscode/
+!.vscode/extensions.json   # optional: share recommended extensions
+
+# ========================
+# NuGet
+# ========================
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+nuget.locals.json
+
+# ========================
+# Logs & Temp
+# ========================
+*.log
+logs/
+*.tmp
+*.temp
+Thumbs.db
+.DS_Store
+
+# ========================
+# Docker (if used)
+# ========================
+.dockerignore
+docker-compose.override.yml
