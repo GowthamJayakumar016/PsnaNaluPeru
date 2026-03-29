@@ -51,12 +51,15 @@ namespace Happy.Services.Implementations
             if (!valid)
                 return null;
 
+           
             return new LoginResponseDto
             {
                 Token = CreateToken(user),
                 Role = user.Role,
-                UserId = user.Id
+                UserId = user.Id,
+                HotelId = user.HotelId  
             };
+
         }
 
         private string CreateToken(User user)

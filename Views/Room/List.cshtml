@@ -1,0 +1,23 @@
+@model List<Happy.DTOs.Room.RoomViewDto>
+
+<h3 class="mb-3">Rooms</h3>
+
+<div class="row">
+    @foreach (var r in Model)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>Room @r.RoomNumber</h5>
+                    <p>Type: @r.Type</p>
+                    <p>Price: ₹@r.Price</p>
+
+                
+                    <a class="btn btn-success w-100" href="/Booking/Create?roomId=@r.Id">Book Now</a>
+                </div>
+            </div>
+        </div>
+    }
+    
+
+</div>

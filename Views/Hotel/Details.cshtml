@@ -1,0 +1,25 @@
+@model Happy.DTOs.Booking.CreateBookingDto
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body">
+                <h4 class="mb-3">Book Room</h4>
+
+                <form method="post">
+                    <input type="hidden" name="RoomId" value="@Model.RoomId" />
+
+                    <label>Check In</label>
+                    <input class="form-control mb-3" name="CheckIn" type="date" />
+
+                    <label>Check Out</label>
+                    <input class="form-control mb-3" name="CheckOut" type="date" />
+
+                    <button class="btn btn-primary w-100">Submit Booking</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+
+</div>

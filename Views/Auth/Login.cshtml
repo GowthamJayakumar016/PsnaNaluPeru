@@ -1,0 +1,26 @@
+@model Happy.DTOs.Auth.LoginDto
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-body">
+                <h3 class="text-center mb-3">Login</h3>
+
+                
+                <form method="post">
+                    <input class="form-control mb-3" name="Email" placeholder="Email" />
+                    <input class="form-control mb-3" name="Password" type="password" placeholder="Password" />
+
+                    <button class="btn btn-primary w-100">Login</button>
+                </form>
+
+                <p class="text-center mt-3">
+                    Don't have an account?
+                    <a href="/Auth/Register">Register</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+
+</div>

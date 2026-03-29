@@ -8,7 +8,6 @@ namespace Happy.Services.Implementations
     {
         private readonly IRoomRepository _repo;
 
-```
     public RoomService(IRoomRepository repo)
         {
             _repo = repo;
@@ -35,6 +34,6 @@ namespace Happy.Services.Implementations
             return list;
         }
     }
-```
+
 
 }

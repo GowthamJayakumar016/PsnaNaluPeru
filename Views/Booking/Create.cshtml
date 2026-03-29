@@ -1,0 +1,49 @@
+@model Happy.DTOs.Booking.CreateBookingDto
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+
+        
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Book Room</h5>
+            </div>
+
+            <div class="card-body">
+
+                <form method="post">
+
+                    <!-- Hidden RoomId -->
+                    <input type="hidden" name="RoomId" value="@Model.RoomId" />
+
+                    <!-- Check In -->
+                    <div class="mb-3">
+                        <label class="form-label">Check-In Date</label>
+                        <input class="form-control" name="CheckIn" type="date" required />
+                    </div>
+
+                    <!-- Check Out -->
+                    <div class="mb-3">
+                        <label class="form-label">Check-Out Date</label>
+                        <input class="form-control" name="CheckOut" type="date" required />
+                    </div>
+
+                    <!-- Info Note -->
+                    <div class="alert alert-info">
+                        * Booking will be submitted as <strong>Pending</strong> and confirmed by admin.
+                    </div>
+
+                    <!-- Submit -->
+                    <button class="btn btn-success w-100">
+                        Submit Booking
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+    
+
+</div>

@@ -5,11 +5,8 @@ namespace Happy.DTOs.Booking
     public class BookingViewDto
     {
         public int Id { get; set; }
-<<<<<<< HEAD
 
-=======
->>>>>>> d06a45075b50152851f83015625ddbc5ebc9a16d
-    public string HotelName { get; set; }
+     public string HotelName { get; set; }
 
         public string RoomNumber { get; set; }
 
@@ -24,8 +21,5 @@ namespace Happy.DTOs.Booking
         public string Status { get; set; }
     }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> d06a45075b50152851f83015625ddbc5ebc9a16d
 }

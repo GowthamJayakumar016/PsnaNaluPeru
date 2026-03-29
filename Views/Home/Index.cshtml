@@ -1,8 +1,22 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model List<Happy.DTOs.Hotel.HotelViewDto>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h3 class="mb-3">Available Hotels</h3>
+
+<div class="row">
+    @foreach (var h in Model)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>@h.Name</h5>
+                    <p>@h.Location</p>
+
+                    
+                    <a class="btn btn-primary w-100" href="/Room/List?hotelId=@h.Id">View Rooms</a>
+                </div>
+            </div>
+        </div>
+    }
+    
+
 </div>

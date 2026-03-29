@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Happy.DTOs.Auth;
 using Happy.Services.Interfaces;
 
@@ -46,7 +46,8 @@ namespace Happy.Controllers
             if (!ModelState.IsValid)
                 return View(dto);
 
-            var result = await _service.LoginAsync(dto);
+
+var result = await _service.LoginAsync(dto);
 
             if (result == null)
             {
@@ -58,11 +59,18 @@ namespace Happy.Controllers
             HttpContext.Session.SetString("UserRole", result.Role);
             HttpContext.Session.SetString("UserId", result.UserId.ToString());
 
+            // 🔥 STORE HOTEL ID (IMPORTANT)
+            if (result.HotelId.HasValue)
+                HttpContext.Session.SetString("HotelId", result.HotelId.Value.ToString());
+
+            // 🔥 AUTO REDIRECT BASED ON ROLE
             if (result.Role == "Admin")
                 return RedirectToAction("Dashboard", "AdminDashboard");
 
             return RedirectToAction("UserDashboard", "Dashboard");
-        }
+
+
+}
 
         public IActionResult Logout()
         {

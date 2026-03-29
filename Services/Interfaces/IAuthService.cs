@@ -5,6 +5,6 @@ namespace Happy.Services.Interfaces
     public interface IAuthService
     {
         Task<bool> RegisterAsync(RegisterDto dto);
-        Task<LoginResponseDto> LoginAsync(LoginDto dto);
+        public Task<LoginResponseDto> LoginAsync(LoginDto dto);
     }
 }
