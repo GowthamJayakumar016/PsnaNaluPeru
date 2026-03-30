@@ -1,0 +1,51 @@
+@model List<Happy.DTOs.Admin.AdminRoomDto>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0">Rooms (your hotel)</h3>
+    <div class="d-flex gap-2">
+        <a class="btn btn-success btn-sm" href="/AdminRoom/Create">Add room</a>
+        <a class="btn btn-outline-secondary btn-sm" href="/AdminDashboard/Dashboard">Dashboard</a>
+    </div>
+</div>
+
+<table class="table table-bordered shadow">
+    <thead class="table-dark">
+        <tr>
+            <th>Room</th>
+            <th>Type</th>
+            <th>Facilities</th>
+            <th>Price</th>
+            <th>Capacity</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.RoomNumber</td>
+                <td>@r.Type</td>
+                <td>@r.Amenities</td>
+                <td>₹@r.Price</td>
+                <td>@r.Capacity</td>
+                <td>@(r.IsActive ? "Active" : "Inactive")</td>
+                <td>
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-primary btn-sm" href="/AdminRoom/Edit/@r.Id">Edit</a>
+                        @if (r.IsActive)
+                        {
+                            <form method="post" action="/AdminRoom/Deactivate/@r.Id">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Deactivate</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="text-muted small">—</span>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

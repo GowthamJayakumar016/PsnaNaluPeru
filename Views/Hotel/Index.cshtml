@@ -1,34 +1,90 @@
 @model List<Happy.DTOs.Hotel.HotelViewDto>
 
-<h3 class="mb-3">Available Hotels</h3>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0">Browse Hotels</h3>
+    <a class="btn btn-outline-secondary" href="/Dashboard/UserDashboard">Back to Dashboard</a>
+</div>
 
-@if (Model == null || Model.Count == 0)
-{
-    <div class="alert alert-warning">
-        No hotels available
-    </div>
+@{
+    var qLocation = Context.Request.Query["location"].ToString();
+    var qCategory = Context.Request.Query["category"].ToString();
+    var qMinPrice = Context.Request.Query["minPrice"].ToString();
+    var qMaxPrice = Context.Request.Query["maxPrice"].ToString();
+    var qAmenities = Context.Request.Query["amenities"].ToString();
 }
-else
-{
 
-    <div class="row">
-        @foreach (var h in Model)
-        {
-            <div class="col-md-4 mb-3">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5>@h.Name</h5> <p>@h.Location</p>
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form method="get" action="/Hotel/Index" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Location</label>
+                <select class="form-select" name="location" onchange="this.form.submit()">
+                    <option value="" selected="@string.IsNullOrWhiteSpace(qLocation)">All</option>
+                    @foreach (var opt in (List<string>)ViewBag.LocationOptions)
+                    {
+                        <option value="@opt" selected="@(opt.Equals(qLocation, System.StringComparison.OrdinalIgnoreCase))">@opt</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Category (Type)</label>
+                <select class="form-select" name="category" onchange="this.form.submit()">
+                    <option value="" selected="@string.IsNullOrWhiteSpace(qCategory)">All</option>
+                    @foreach (var opt in (List<string>)ViewBag.RoomTypeOptions)
+                    {
+                        <option value="@opt" selected="@(opt.Equals(qCategory, System.StringComparison.OrdinalIgnoreCase))">@opt</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Min price</label>
+                <select class="form-select" name="minPrice" onchange="this.form.submit()">
+                    <option value="" selected="@string.IsNullOrWhiteSpace(qMinPrice)">Any</option>
+                    @foreach (var opt in (List<decimal>)ViewBag.PriceOptions)
+                    {
+                        <option value="@opt" selected="@(opt.ToString(System.Globalization.CultureInfo.InvariantCulture) == qMinPrice)">@opt</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Max price</label>
+                <select class="form-select" name="maxPrice" onchange="this.form.submit()">
+                    <option value="" selected="@string.IsNullOrWhiteSpace(qMaxPrice)">Any</option>
+                    @foreach (var opt in (List<decimal>)ViewBag.PriceOptions)
+                    {
+                        <option value="@opt" selected="@(opt.ToString(System.Globalization.CultureInfo.InvariantCulture) == qMaxPrice)">@opt</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Amenities</label>
+                <select class="form-select" name="amenities" onchange="this.form.submit()">
+                    <option value="" selected="@string.IsNullOrWhiteSpace(qAmenities)">All</option>
+                    @foreach (var opt in (List<string>)ViewBag.AmenitiesOptions)
+                    {
+                        <option value="@opt" selected="@(opt.Equals(qAmenities, System.StringComparison.OrdinalIgnoreCase))">@opt</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-12">
+                <button class="btn btn-primary w-100" type="submit">Apply filters</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-                       
-                        <a class="btn btn-primary w-100"
-                               href="/Room/List?hotelId=@h.Id">
-                            View Rooms
-                        </a>
-                    </div>
+<div class="row">
+    @foreach (var h in Model)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card shadow h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">@h.Name</h5>
+                    <p class="text-muted mb-1">@h.Location</p>
+                    <p class="small flex-grow-1">@h.Address</p>
+                    <a class="btn btn-primary w-100 mt-2" href="/Hotel/Details/@h.Id?location=@qLocation&category=@qCategory&minPrice=@qMinPrice&maxPrice=@qMaxPrice&amenities=@qAmenities">View hotel</a>
                 </div>
             </div>
-        }
-    </div>
-
-
-}
+        </div>
+    }
+</div>

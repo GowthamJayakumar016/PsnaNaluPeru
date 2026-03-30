@@ -2,12 +2,28 @@
 
 <h3 class="mb-3">My Bookings</h3>
 
+@if (TempData["BookingSuccessMessage"] != null)
+{
+    <div class="alert alert-info" role="alert">
+        @TempData["BookingSuccessMessage"]
+    </div>
+}
+
+@if (TempData["CancelError"] != null)
+{
+    <div class="alert alert-warning" role="alert">
+        @TempData["CancelError"]
+    </div>
+}
+
 <table class="table table-bordered shadow">
     <thead class="table-dark">
         <tr>
             <th>Hotel</th>
             <th>Room</th>
             <th>Dates</th>
+            <th>Guests</th>
+            <th>Total</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -19,7 +35,9 @@
             <tr>
                 <td>@b.HotelName</td>
                 <td>@b.RoomNumber</td>
-                <td>@b.CheckIn.ToShortDateString() - @b.CheckOut.ToShortDateString()</td>
+                <td>@b.CheckIn.ToShortDateString() – @b.CheckOut.ToShortDateString()</td>
+                <td>@b.NumberOfPersons</td>
+                <td>₹@b.TotalPrice.ToString("N2")</td>
                 <td>
                     <span class="badge bg-info">@b.Status</span>
                 </td>
@@ -27,6 +45,10 @@
                     @if (b.Status == "Pending")
                     {
                         <a class="btn btn-danger btn-sm" href="/Booking/Cancel/@b.Id">Cancel</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary btn-sm" href="/Booking/Rebook/@b.Id">Rebook</a>
                     }
                 </td>
             </tr>

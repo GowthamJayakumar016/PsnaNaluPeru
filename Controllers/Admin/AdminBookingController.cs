@@ -1,8 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
+using Happy.Filters;
 using Happy.Services.Interfaces.Admin;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Happy.Controllers
 {
+    [RequireAdmin]
     public class AdminBookingController : Controller
     {
         private readonly IAdminBookingService _service;
@@ -24,19 +26,22 @@ namespace Happy.Controllers
 
         public async Task<IActionResult> Approve(int id)
         {
-            await _service.ApproveBookingAsync(id);
+            int hotelId = int.Parse(HttpContext.Session.GetString("HotelId")!);
+            await _service.ApproveBookingAsync(id, hotelId);
             return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Reject(int id)
         {
-            await _service.RejectBookingAsync(id);
+            int hotelId = int.Parse(HttpContext.Session.GetString("HotelId")!);
+            await _service.RejectBookingAsync(id, hotelId);
             return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Checkout(int id)
         {
-            await _service.CompleteBookingAsync(id);
+            int hotelId = int.Parse(HttpContext.Session.GetString("HotelId")!);
+            await _service.CompleteBookingAsync(id, hotelId);
             return RedirectToAction("Index");
         }
     }

@@ -12,6 +12,8 @@ namespace Happy.DTOs.Booking
 
         public string RoomType { get; set; }
 
+        public int RoomId { get; set; }
+
         public DateTime CheckIn { get; set; }
 
         public DateTime CheckOut { get; set; }
@@ -19,6 +21,10 @@ namespace Happy.DTOs.Booking
         public decimal TotalPrice { get; set; }
 
         public string Status { get; set; }
+
+        public int NumberOfPersons { get; set; }
+
+        public DateTime? CancelledAt { get; set; }
     }
 
 

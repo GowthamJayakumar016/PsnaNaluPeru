@@ -1,6 +1,7 @@
 @model List<Happy.DTOs.Admin.AdminBookingDto>
 
 <h3 class="mb-3">Admin Dashboard</h3>
+<p class="text-muted">Bookings for your hotel. Approve or reject pending requests; check out confirmed stays.</p>
 
 <table class="table table-striped shadow">
     <thead class="table-dark">
@@ -12,24 +13,30 @@
             <th>Actions</th>
         </tr>
     </thead>
-
-
     <tbody>
         @foreach (var b in Model)
         {
             <tr>
                 <td>@b.UserName</td>
-                <td>@b.RoomNumber</td>
-                <td>@b.CheckIn.ToShortDateString() - @b.CheckOut.ToShortDateString()</td>
+                <td>@b.RoomNumber (@b.RoomType)</td>
+                <td>@b.CheckIn.ToShortDateString() – @b.CheckOut.ToShortDateString()</td>
                 <td>@b.Status</td>
                 <td>
-                    <a class="btn btn-success btn-sm" href="/AdminBooking/Approve/@b.Id">Approve</a>
-                    <a class="btn btn-danger btn-sm" href="/AdminBooking/Reject/@b.Id">Reject</a>
-                    <a class="btn btn-warning btn-sm" href="/AdminBooking/Checkout/@b.Id">Checkout</a>
+                    @if (b.Status == "Pending")
+                    {
+                        <a class="btn btn-success btn-sm" href="/AdminBooking/Approve/@b.Id">Approve</a>
+                        <a class="btn btn-danger btn-sm" href="/AdminBooking/Reject/@b.Id">Reject</a>
+                    }
+                    else if (b.Status == "Confirmed")
+                    {
+                        <a class="btn btn-warning btn-sm" href="/AdminBooking/Checkout/@b.Id">Check-out</a>
+                    }
+                    else
+                    {
+                        <span class="text-muted small">—</span>
+                    }
                 </td>
             </tr>
         }
     </tbody>
-    
-
 </table>

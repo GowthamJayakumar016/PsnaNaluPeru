@@ -17,6 +17,13 @@ namespace Happy.DTOs.Booking
 
         [Required]
         public DateTime CheckOut { get; set; }
+
+        [Required]
+        [Range(1, 20)]
+        public int NumberOfPersons { get; set; }
+
+        // Links this draft to the original booking when user clicks "Rebook".
+        public int? RebookedFromBookingId { get; set; }
     }
 
 }

@@ -20,13 +20,17 @@ namespace Happy.Repositories.Implementations.Admin
             return await _context.Bookings
                 .Include(x => x.User)
                 .Include(x => x.Room)
-                .Where(x => x.Room.HotelId == hotelId)
+                .Where(x => x.Room.HotelId == hotelId && x.Status != "PendingPayment")
                 .ToListAsync();
         }
 
-        public async Task<Booking> GetBookingByIdAsync(int id)
+        public async Task<Booking?> GetBookingByIdWithRoomAsync(int id)
         {
-            return await _context.Bookings.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Bookings
+                .Include(x => x.Room)
+                .ThenInclude(r => r.Hotel)
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task SaveAsync()

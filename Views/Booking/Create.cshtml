@@ -1,14 +1,16 @@
 @model Happy.DTOs.Booking.CreateBookingDto
 
+<div class="mb-3">
+    <a href="javascript:history.back()" class="text-decoration-none">← Back</a>
+</div>
+
 <div class="row justify-content-center">
-    <div class="col-md-6">
-
+    <div class="col-md-5">
         <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Book Room</h5>
-            </div>
-
             <div class="card-body">
+                <h4 class="mb-3">Book room</h4>
+
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
                 <!-- 🔴 ERROR MESSAGE -->
                 @if (!ViewData.ModelState.IsValid)
@@ -22,45 +24,96 @@
                 }
 
                 <form method="post">
+                    <label class="form-label">Room</label>
+                    <select asp-for="RoomId" class="form-select mb-3" id="RoomIdSelect">
+                        @{
+                            var options = ViewBag.RoomOptions as IEnumerable<dynamic>;
+                        }
+                        @if (options != null)
+                        {
+                            foreach (var opt in options)
+                            {
+                                <option value="@opt.Id"
+                                        data-price="@opt.Price"
+                                        selected="@(Model.RoomId == opt.Id)">
+                                    Room @opt.RoomNumber - ₹@opt.Price / night
+                                </option>
+                            }
+                        }
+                    </select>
+                    <input type="hidden" asp-for="RebookedFromBookingId" />
 
-                    <input type="hidden" name="RoomId" value="@Model.RoomId" />
+                    <label class="form-label" asp-for="CheckIn">Check-in</label>
+                    <input class="form-control mb-3" asp-for="CheckIn" type="datetime-local" />
 
-                    <!-- Check In -->
-                    <div class="mb-3">
-                        <label class="form-label">Check-In Date</label>
-                        <input class="form-control" id="checkIn" name="CheckIn" type="date" required />
+                    <label class="form-label" asp-for="CheckOut">Check-out</label>
+                    <input class="form-control mb-3" asp-for="CheckOut" type="datetime-local" />
+
+                    <label class="form-label" asp-for="NumberOfPersons">Number of persons</label>
+                    <input class="form-control mb-3" asp-for="NumberOfPersons" type="number" min="1" />
+
+                    <div class="alert alert-light border mt-3">
+                        <div><b>Total days:</b> <span id="totalDays">—</span></div>
+                        <div><b>Estimated total (room price only):</b> <span id="estimatedTotal">—</span></div>
                     </div>
 
-                    <!-- Check Out -->
-                    <div class="mb-3">
-                        <label class="form-label">Check-Out Date</label>
-                        <input class="form-control" id="checkOut" name="CheckOut" type="date" required />
-                    </div>
-
-                    <!-- Nights -->
-                    <div class="mb-3">
-                        <label class="form-label">Total Nights</label>
-                        <input class="form-control" id="nights" type="text" readonly />
-                    </div>
-
-                    <!-- Price -->
-                    <div class="mb-3">
-                        <label class="form-label">Total Price</label>
-                        <input class="form-control" id="price" type="text" readonly />
-                    </div>
-
-                    <button class="btn btn-success w-100">
-                        Submit Booking
-                    </button>
-
+                    <button type="submit" class="btn btn-primary w-100">Submit booking</button>
                 </form>
-
             </div>
         </div>
-
     </div>
-   
 
+<script>
+    (function () {
+        const roomSelect = document.getElementById('RoomIdSelect');
+        const checkIn = document.querySelector('input[name="CheckIn"]');
+        const checkOut = document.querySelector('input[name="CheckOut"]');
+        const totalDaysEl = document.getElementById('totalDays');
+        const estimatedTotalEl = document.getElementById('estimatedTotal');
+
+        function getSelectedPrice() {
+            if (!roomSelect) return null;
+            const opt = roomSelect.options[roomSelect.selectedIndex];
+            return opt ? parseFloat(opt.dataset.price || '0') : null;
+        }
+
+        function update() {
+            if (!checkIn || !checkOut || !totalDaysEl || !estimatedTotalEl) return;
+
+            if (!roomSelect) return;
+
+            const inVal = checkIn.value;
+            const outVal = checkOut.value;
+            if (!inVal || !outVal) {
+                totalDaysEl.textContent = '—';
+                estimatedTotalEl.textContent = '—';
+                return;
+            }
+
+            const inDate = new Date(inVal);
+            const outDate = new Date(outVal);
+            const diffMs = outDate - inDate;
+            if (isNaN(diffMs) || diffMs <= 0) {
+                totalDaysEl.textContent = '—';
+                estimatedTotalEl.textContent = '—';
+                return;
+            }
+
+            const msPerDay = 1000 * 60 * 60 * 24;
+            const days = Math.ceil(diffMs / msPerDay);
+            const price = getSelectedPrice() || 0;
+            const total = days * price;
+
+            totalDaysEl.textContent = days;
+            estimatedTotalEl.textContent = '₹' + total.toFixed(2);
+        }
+
+        if (roomSelect) roomSelect.addEventListener('change', update);
+        if (checkIn) checkIn.addEventListener('change', update);
+        if (checkOut) checkOut.addEventListener('change', update);
+        update();
+    })();
+</script>
 </div>
 
 <script>
