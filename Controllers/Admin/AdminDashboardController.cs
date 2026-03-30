@@ -2,7 +2,7 @@ using Happy.Filters;
 using Happy.Services.Interfaces.Admin;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Happy.Controllers.Admin
+namespace Happy.Controllers
 {
     [RequireAdmin]
     public class AdminDashboardController : Controller
@@ -20,7 +20,8 @@ namespace Happy.Controllers.Admin
             int hotelId = int.Parse(HttpContext.Session.GetString("HotelId"));
 
             var bookings = await _service.GetBookingsByHotelIdAsync(hotelId);
-            return View(bookings);
+
+            return View(bookings); 
         }
     }
 

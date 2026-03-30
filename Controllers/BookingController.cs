@@ -54,9 +54,6 @@ namespace Happy.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateBookingDto dto)
         {
-            if (!ModelState.IsValid)
-                return View(dto);
-
             int userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
             var result = await _service.CreateBookingDraftAsync(dto, userId);
@@ -76,6 +73,7 @@ namespace Happy.Controllers
             int userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
             var bookings = await _service.GetUserBookingsAsync(userId);
+
             return View(bookings);
         }
 

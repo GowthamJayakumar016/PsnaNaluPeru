@@ -15,30 +15,31 @@ namespace Happy.Repositories.Implementations
             _context = context;
         }
 
+        public async Task<List<Booking>> GetBookingsByRoomIdAsync(int roomId)
+        {
+            return await _context.Bookings
+                .Where(b => b.RoomId == roomId)
+                .ToListAsync();
+        }
+
         public async Task AddBookingAsync(Booking booking)
         {
             await _context.Bookings.AddAsync(booking);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<Booking>> GetBookingsByUserIdAsync(int userId)
         {
             return await _context.Bookings
-                .Include(x => x.Room)
+                .Include(b => b.Room)
                 .ThenInclude(r => r.Hotel)
-                .Where(x => x.UserId == userId)
-                .ToListAsync();
-        }
-
-        public async Task<List<Booking>> GetBookingsByRoomIdAsync(int roomId)
-        {
-            return await _context.Bookings
-                .Where(x => x.RoomId == roomId)
+                .Where(b => b.UserId == userId)
                 .ToListAsync();
         }
 
         public async Task<Booking?> GetBookingByIdAsync(int id)
         {
-            return await _context.Bookings.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Bookings.FindAsync(id);
         }
 
         public async Task<Booking?> GetBookingByIdWithRoomAndUserAsync(int id)
@@ -70,6 +71,7 @@ namespace Happy.Repositories.Implementations
 
         public async Task SaveAsync()
         {
+            _context.Bookings.Update(booking);
             await _context.SaveChangesAsync();
         }
     }

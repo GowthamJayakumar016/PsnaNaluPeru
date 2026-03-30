@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Happy.Models;
 
-namespace Happy.Controllers.Admin
+namespace Happy.Controllers
 {
     [RequireAdmin]
     public class AdminRoomController : Controller
@@ -25,7 +25,9 @@ namespace Happy.Controllers.Admin
             int hotelId = int.Parse(HttpContext.Session.GetString("HotelId"));
 
             var rooms = await _service.GetRoomsByHotelIdAsync(hotelId);
-            return View(rooms);
+
+            // 🔥 IMPORTANT CHANGE
+            return View("Rooms", rooms);
         }
 
         [HttpGet]

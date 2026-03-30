@@ -72,15 +72,22 @@ using (var scope = app.Services.CreateScope())
 // 🔹 Middleware
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+
+// Ensure DB created
+context.Database.Migrate();
+
+    // Seed data
+    DbInitializer.Seed(context);
+
+
 }
 
+// 🔹 Middleware
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseSession();
-
 app.UseAuthorization();
 
 // 🔹 Routing

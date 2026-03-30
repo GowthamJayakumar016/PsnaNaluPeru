@@ -12,6 +12,17 @@
 
                 <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
+                <!-- 🔴 ERROR MESSAGE -->
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <p>@error.ErrorMessage</p>
+                        }
+                    </div>
+                }
+
                 <form method="post">
                     <label class="form-label">Room</label>
                     <select asp-for="RoomId" class="form-select mb-3" id="RoomIdSelect">
@@ -104,3 +115,30 @@
     })();
 </script>
 </div>
+
+<script>
+    const checkIn = document.getElementById("checkIn");
+    const checkOut = document.getElementById("checkOut");
+    const nights = document.getElementById("nights");
+    const price = document.getElementById("price");
+
+    const pricePerNight = 1000; // simple fixed price
+
+    function calculate() {
+        const inDate = new Date(checkIn.value);
+        const outDate = new Date(checkOut.value);
+
+        if (checkIn.value && checkOut.value && outDate > inDate) {
+            const diff = (outDate - inDate) / (1000 * 60 * 60 * 24);
+
+            nights.value = diff;
+            price.value = diff * pricePerNight;
+        } else {
+            nights.value = "";
+            price.value = "";
+        }
+    }
+
+    checkIn.addEventListener("change", calculate);
+    checkOut.addEventListener("change", calculate);
+</script>
