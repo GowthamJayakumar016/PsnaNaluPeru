@@ -8,6 +8,7 @@ namespace Happy.Controllers
     {
         private readonly IBookingService _service;
 
+
     public BookingController(IBookingService service)
         {
             _service = service;
@@ -26,18 +27,17 @@ namespace Happy.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateBookingDto dto)
         {
-            if (!ModelState.IsValid)
-                return View(dto);
-
             int userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
-            var result = await _service.CreateBookingAsync(dto, userId);
+            bool isAvailable = await _service.CheckAvailabilityAsync(dto);
 
-            if (!result)
+            if (!isAvailable)
             {
-                ModelState.AddModelError("", "Room not available");
+                ModelState.AddModelError("", "Room already booked for selected dates");
                 return View(dto);
             }
+
+            await _service.CreateBookingAsync(dto, userId);
 
             return RedirectToAction("MyBookings");
         }
@@ -47,6 +47,7 @@ namespace Happy.Controllers
             int userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
             var bookings = await _service.GetUserBookingsAsync(userId);
+
             return View(bookings);
         }
 

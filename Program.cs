@@ -16,7 +16,15 @@ builder.Services.AddControllersWithViews();
 
 // 🔹 Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null);
+        }));
 
 // 🔹 Session
 builder.Services.AddSession();
@@ -41,18 +49,25 @@ builder.Services.AddScoped<IAdminRoomService, AdminRoomService>();
 
 var app = builder.Build();
 
-// 🔹 Middleware
-if (!app.Environment.IsDevelopment())
+// 🔥 APPLY MIGRATION + SEED DATA (IMPORTANT FIX)
+using (var scope = app.Services.CreateScope())
 {
-    app.UseExceptionHandler("/Home/Error");
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+
+// Ensure DB created
+context.Database.Migrate();
+
+    // Seed data
+    DbInitializer.Seed(context);
+
+
 }
 
+// 🔹 Middleware
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseSession();
-
 app.UseAuthorization();
 
 // 🔹 Routing

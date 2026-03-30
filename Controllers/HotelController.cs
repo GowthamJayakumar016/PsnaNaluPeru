@@ -15,6 +15,9 @@ namespace Happy.Controllers
         public async Task<IActionResult> Index()
         {
             var hotels = await _service.GetAllHotelsAsync();
+
+            Console.WriteLine("Hotel Count: " + hotels.Count);
+
             return View(hotels);
         }
 

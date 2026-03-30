@@ -8,16 +8,14 @@ namespace Happy.Services.Implementations
     public class BookingService : IBookingService
     {
         private readonly IBookingRepository _repo;
-        private readonly IRoomRepository _roomRepo;
 
 
-    public BookingService(IBookingRepository repo, IRoomRepository roomRepo)
+    public BookingService(IBookingRepository repo)
         {
             _repo = repo;
-            _roomRepo = roomRepo;
         }
 
-        public async Task<bool> CreateBookingAsync(CreateBookingDto dto, int userId)
+        public async Task<bool> CheckAvailabilityAsync(CreateBookingDto dto)
         {
             var bookings = await _repo.GetBookingsByRoomIdAsync(dto.RoomId);
 
@@ -26,13 +24,18 @@ namespace Happy.Services.Implementations
                 if (b.Status == "Confirmed")
                 {
                     if (dto.CheckIn < b.CheckOut && dto.CheckOut > b.CheckIn)
+                    {
                         return false;
+                    }
                 }
             }
 
-            var room = await _roomRepo.GetRoomByIdAsync(dto.RoomId);
+            return true;
+        }
 
-            var days = (dto.CheckOut - dto.CheckIn).Days;
+        public async Task CreateBookingAsync(CreateBookingDto dto, int userId)
+        {
+            int nights = (dto.CheckOut - dto.CheckIn).Days;
 
             var booking = new Booking
             {
@@ -40,14 +43,12 @@ namespace Happy.Services.Implementations
                 RoomId = dto.RoomId,
                 CheckIn = dto.CheckIn,
                 CheckOut = dto.CheckOut,
-                TotalPrice = room.Price * days,
+               
+                TotalPrice = nights * 1000, // simple logic
                 Status = "Pending"
             };
 
             await _repo.AddBookingAsync(booking);
-            await _repo.SaveAsync();
-
-            return true;
         }
 
         public async Task<List<BookingViewDto>> GetUserBookingsAsync(int userId)
@@ -63,7 +64,6 @@ namespace Happy.Services.Implementations
                     Id = b.Id,
                     HotelName = b.Room.Hotel.Name,
                     RoomNumber = b.Room.RoomNumber,
-                    RoomType = b.Room.Type,
                     CheckIn = b.CheckIn,
                     CheckOut = b.CheckOut,
                     TotalPrice = b.TotalPrice,
@@ -76,17 +76,17 @@ namespace Happy.Services.Implementations
 
         public async Task CancelBookingAsync(int bookingId)
         {
-            var booking = await _repo.GetBookingByIdAsync(bookingId);
+            var booking = await _repo.GetByIdAsync(bookingId);
 
             if (booking == null)
                 return;
 
-            var hours = (booking.CheckIn - DateTime.Now).TotalHours;
+            var hoursLeft = (booking.CheckIn - DateTime.Now).TotalHours;
 
-            if (hours > 4)
+            if (hoursLeft > 4)
             {
                 booking.Status = "Cancelled";
-                await _repo.SaveAsync();
+                await _repo.UpdateAsync(booking);
             }
         }
     }

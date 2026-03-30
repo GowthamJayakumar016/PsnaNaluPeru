@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Happy.Services.Interfaces.Admin;
 
-namespace Happy.Controllers.Admin
+namespace Happy.Controllers
 {
     public class AdminBookingController : Controller
     {
         private readonly IAdminBookingService _service;
-
 
     public AdminBookingController(IAdminBookingService service)
         {
@@ -18,7 +17,9 @@ namespace Happy.Controllers.Admin
             int hotelId = int.Parse(HttpContext.Session.GetString("HotelId"));
 
             var bookings = await _service.GetBookingsByHotelIdAsync(hotelId);
-            return View(bookings);
+
+            // 🔥 IMPORTANT CHANGE
+            return View("Bookings", bookings);
         }
 
         public async Task<IActionResult> Approve(int id)

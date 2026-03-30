@@ -3,7 +3,6 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
 
-        
         <div class="card shadow">
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">Book Room</h5>
@@ -11,29 +10,45 @@
 
             <div class="card-body">
 
+                <!-- 🔴 ERROR MESSAGE -->
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <p>@error.ErrorMessage</p>
+                        }
+                    </div>
+                }
+
                 <form method="post">
 
-                    <!-- Hidden RoomId -->
                     <input type="hidden" name="RoomId" value="@Model.RoomId" />
 
                     <!-- Check In -->
                     <div class="mb-3">
                         <label class="form-label">Check-In Date</label>
-                        <input class="form-control" name="CheckIn" type="date" required />
+                        <input class="form-control" id="checkIn" name="CheckIn" type="date" required />
                     </div>
 
                     <!-- Check Out -->
                     <div class="mb-3">
                         <label class="form-label">Check-Out Date</label>
-                        <input class="form-control" name="CheckOut" type="date" required />
+                        <input class="form-control" id="checkOut" name="CheckOut" type="date" required />
                     </div>
 
-                    <!-- Info Note -->
-                    <div class="alert alert-info">
-                        * Booking will be submitted as <strong>Pending</strong> and confirmed by admin.
+                    <!-- Nights -->
+                    <div class="mb-3">
+                        <label class="form-label">Total Nights</label>
+                        <input class="form-control" id="nights" type="text" readonly />
                     </div>
 
-                    <!-- Submit -->
+                    <!-- Price -->
+                    <div class="mb-3">
+                        <label class="form-label">Total Price</label>
+                        <input class="form-control" id="price" type="text" readonly />
+                    </div>
+
                     <button class="btn btn-success w-100">
                         Submit Booking
                     </button>
@@ -44,6 +59,33 @@
         </div>
 
     </div>
-    
+   
 
 </div>
+
+<script>
+    const checkIn = document.getElementById("checkIn");
+    const checkOut = document.getElementById("checkOut");
+    const nights = document.getElementById("nights");
+    const price = document.getElementById("price");
+
+    const pricePerNight = 1000; // simple fixed price
+
+    function calculate() {
+        const inDate = new Date(checkIn.value);
+        const outDate = new Date(checkOut.value);
+
+        if (checkIn.value && checkOut.value && outDate > inDate) {
+            const diff = (outDate - inDate) / (1000 * 60 * 60 * 24);
+
+            nights.value = diff;
+            price.value = diff * pricePerNight;
+        } else {
+            nights.value = "";
+            price.value = "";
+        }
+    }
+
+    checkIn.addEventListener("change", calculate);
+    checkOut.addEventListener("change", calculate);
+</script>
