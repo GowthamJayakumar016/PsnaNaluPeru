@@ -16,7 +16,10 @@ namespace Happy.Repositories.Implementations
 
         public async Task<List<Hotel>> GetAllHotelsAsync()
         {
-            return await _context.Hotels.ToListAsync();
+            return await _context.Hotels
+                .Where(h => h.IsActive)
+                .OrderBy(h => h.Name)
+                .ToListAsync();
         }
 
         public async Task<Hotel> GetHotelByIdAsync(int id)

@@ -1,0 +1,69 @@
+@model List<Happy.DTOs.Admin.AdminBookingDto>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0">Manage bookings</h3>
+    <a class="btn btn-outline-secondary" href="/AdminDashboard/Dashboard">Dashboard</a>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>User</th>
+                    <th>Room</th>
+                    <th>Type</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Status</th>
+                    <th style="min-width:220px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var b in Model)
+                {
+                    <tr>
+                        <td>@b.UserName</td>
+                        <td>@b.RoomNumber</td>
+                        <td>@b.RoomType</td>
+                        <td>@b.CheckIn.ToShortDateString()</td>
+                        <td>@b.CheckOut.ToShortDateString()</td>
+                        <td>
+                            @if (b.Status == "Pending")
+                            {
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            }
+                            else if (b.Status == "Confirmed")
+                            {
+                                <span class="badge bg-success">Confirmed</span>
+                            }
+                            else if (b.Status == "Cancelled")
+                            {
+                                <span class="badge bg-danger">Cancelled</span>
+                            }
+                            else if (b.Status == "Completed")
+                            {
+                                <span class="badge bg-secondary">Completed</span>
+                            }
+                        </td>
+                        <td>
+                            @if (b.Status == "Pending")
+                            {
+                                <a class="btn btn-success btn-sm me-1" href="/AdminBooking/Approve/@b.Id">Approve</a>
+                                <a class="btn btn-danger btn-sm" href="/AdminBooking/Reject/@b.Id">Reject</a>
+                            }
+                            else if (b.Status == "Confirmed")
+                            {
+                                <a class="btn btn-warning btn-sm" href="/AdminBooking/Checkout/@b.Id">Check-out</a>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">—</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

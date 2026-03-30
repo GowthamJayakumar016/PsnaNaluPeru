@@ -1,0 +1,51 @@
+@model Happy.DTOs.Payment.PaymentCheckoutViewDto
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0">Payment</h3>
+    <a class="btn btn-outline-secondary btn-sm" href="/Booking/MyBookings">My Bookings</a>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.Error))
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.Error
+    </div>
+}
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <h5 class="mb-2">@Model.HotelName</h5>
+        <p class="mb-1"><b>Room:</b> @Model.RoomNumber (@Model.RoomType)</p>
+        <p class="mb-1"><b>Check-in:</b> @Model.CheckIn</p>
+        <p class="mb-1"><b>Check-out:</b> @Model.CheckOut</p>
+        <p class="mb-3"><b>Guests:</b> @Model.NumberOfPersons</p>
+
+        <hr />
+
+        <p class="mb-1"><b>Subtotal:</b> ₹@Model.SubtotalPrice.ToString("N2")</p>
+        <p class="mb-1"><b>Discount:</b> ₹@Model.DiscountAmount.ToString("N2")</p>
+        <p class="mb-0 fs-5"><b>Total:</b> ₹@Model.TotalPrice.ToString("N2")</p>
+    </div>
+</div>
+
+<form method="post">
+    <input type="hidden" name="bookingId" value="@Model.BookingId" />
+
+    <div class="mb-3">
+        <label class="form-label">Coupon code (optional)</label>
+        <input class="form-control" name="CouponCode" value="@Model.CouponCode" placeholder="e.g., WELCOME10" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Payment method</label>
+        <select class="form-select" name="Method" required>
+            <option value="" selected disabled>Select</option>
+            <option value="Card">Card</option>
+            <option value="UPI">UPI</option>
+            <option value="Netbanking">Netbanking</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">Complete payment</button>
+</form>
+

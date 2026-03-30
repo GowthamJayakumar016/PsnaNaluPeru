@@ -1,8 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
+using Happy.Filters;
 using Happy.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Happy.Controllers
 {
+    [RequireUser]
     public class DashboardController : Controller
     {
         private readonly IBookingService _service;

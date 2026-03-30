@@ -17,11 +17,12 @@ namespace Happy.Repositories.Implementations
         public async Task<List<Room>> GetRoomsByHotelIdAsync(int hotelId)
         {
             return await _context.Rooms
-                .Where(x => x.HotelId == hotelId)
+                .Where(x => x.HotelId == hotelId && x.IsActive)
+                .OrderBy(x => x.RoomNumber)
                 .ToListAsync();
         }
 
-        public async Task<Room> GetRoomByIdAsync(int id)
+        public async Task<Room?> GetRoomByIdAsync(int id)
         {
             return await _context.Rooms.FirstOrDefaultAsync(x => x.Id == id);
         }

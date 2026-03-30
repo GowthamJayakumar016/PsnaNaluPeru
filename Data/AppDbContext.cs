@@ -17,6 +17,7 @@ namespace Happy.Data
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Coupon> Coupons { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -57,6 +58,12 @@ namespace Happy.Data
                 .WithOne(b => b.Payment)
                 .HasForeignKey<Payment>(p => p.BookingId);
 
+            // Booking → Booking (rebooked_from self FK)
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.RebookedFromBooking)
+                .WithMany()
+                .HasForeignKey(b => b.RebookedFromBookingId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Room>()
                 .Property(r => r.Price)
@@ -68,6 +75,14 @@ namespace Happy.Data
 
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.DiscountAmount)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<Coupon>()
+                .Property(c => c.DiscountValue)
                 .HasPrecision(10, 2);
 
             modelBuilder.Entity<Room>()

@@ -1,8 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
+using Happy.Filters;
 using Happy.Services.Interfaces.Admin;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Happy.Controllers.Admin
 {
+    [RequireAdmin]
     public class AdminDashboardController : Controller
     {
         private readonly IAdminBookingService _service;

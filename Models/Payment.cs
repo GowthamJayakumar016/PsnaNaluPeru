@@ -11,6 +11,9 @@ namespace Happy.Models
 
         public decimal Amount { get; set; }
 
+        public decimal DiscountAmount { get; set; }
+        public string? CouponCodeApplied { get; set; }
+
         public string Method { get; set; }
 
         public string Status { get; set; }

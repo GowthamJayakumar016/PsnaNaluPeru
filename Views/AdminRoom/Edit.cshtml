@@ -1,0 +1,39 @@
+@model Happy.DTOs.Admin.AdminRoomDto
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0">Edit room</h3>
+    <a class="btn btn-outline-secondary btn-sm" href="/AdminRoom/Index">Back</a>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <form method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <label class="form-label">Room number</label>
+            <input class="form-control mb-2" asp-for="RoomNumber" />
+
+            <label class="form-label">Room type (category)</label>
+            <input class="form-control mb-2" asp-for="Type" />
+
+            <label class="form-label">Amenities / facilities</label>
+            <input class="form-control mb-2" asp-for="Amenities" />
+
+            <label class="form-label">Price (per night)</label>
+            <input class="form-control mb-2" asp-for="Price" type="number" step="0.01" />
+
+            <label class="form-label">Capacity (guests)</label>
+            <input class="form-control mb-3" asp-for="Capacity" type="number" min="1" />
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" asp-for="IsActive" />
+                <label class="form-check-label" asp-for="IsActive">Active</label>
+            </div>
+
+            <button class="btn btn-primary w-100" type="submit">Save changes</button>
+        </form>
+    </div>
+</div>
+

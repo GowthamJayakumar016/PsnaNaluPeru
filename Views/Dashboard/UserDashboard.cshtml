@@ -11,6 +11,20 @@
 
 </div>
 
+@if (TempData["BookingSuccessMessage"] != null)
+{
+    <div class="alert alert-info" role="alert">
+        @TempData["BookingSuccessMessage"]
+    </div>
+}
+
+@if (TempData["CancelError"] != null)
+{
+    <div class="alert alert-warning" role="alert">
+        @TempData["CancelError"]
+    </div>
+}
+
 <!-- SUMMARY CARDS -->
 
 <div class="row mb-4">
@@ -62,6 +76,8 @@
                     <th>Hotel</th>
                     <th>Room</th>
                     <th>Dates</th>
+                    <th>Guests</th>
+                    <th>Total</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -74,9 +90,11 @@
                         <td>@b.HotelName</td>
                         <td>@b.RoomNumber (@b.RoomType)</td>
                         <td>
-                            @b.CheckIn.ToShortDateString() -
+                            @b.CheckIn.ToShortDateString() –
                             @b.CheckOut.ToShortDateString()
                         </td>
+                        <td>@b.NumberOfPersons</td>
+                        <td>₹@b.TotalPrice.ToString("N2")</td>
 
                         <td>
                             @if (b.Status == "Pending")
@@ -107,7 +125,7 @@
                             }
                             else
                             {
-                                <span class="text-muted">No Action</span>
+                                <a class="btn btn-primary btn-sm" href="/Booking/Rebook/@b.Id">Rebook</a>
                             }
                         </td>
                     </tr>

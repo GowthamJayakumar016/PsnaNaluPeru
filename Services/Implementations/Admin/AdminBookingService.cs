@@ -1,5 +1,7 @@
 using Happy.DTOs.Admin;
+using Happy.Repositories.Interfaces;
 using Happy.Repositories.Interfaces.Admin;
+using Happy.Services.Interfaces;
 using Happy.Services.Interfaces.Admin;
 
 namespace Happy.Services.Implementations.Admin
@@ -7,11 +9,12 @@ namespace Happy.Services.Implementations.Admin
     public class AdminBookingService : IAdminBookingService
     {
         private readonly IAdminBookingRepository _repo;
+        private readonly IBookingRepository _bookingRepo;
 
-
-    public AdminBookingService(IAdminBookingRepository repo)
+        public AdminBookingService(IAdminBookingRepository repo, IBookingRepository bookingRepo)
         {
             _repo = repo;
+            _bookingRepo = bookingRepo;
         }
 
         public async Task<List<AdminBookingDto>> GetBookingsByHotelIdAsync(int hotelId)
@@ -37,36 +40,46 @@ namespace Happy.Services.Implementations.Admin
             return list;
         }
 
-        public async Task ApproveBookingAsync(int bookingId)
+        public async Task ApproveBookingAsync(int bookingId, int hotelId)
         {
-            var b = await _repo.GetBookingByIdAsync(bookingId);
-            if (b != null)
+            var b = await _repo.GetBookingByIdWithRoomAsync(bookingId);
+            if (b == null || b.Room.HotelId != hotelId || b.Status != "Pending")
+                return;
+
+            var roomBookings = await _bookingRepo.GetBookingsByRoomIdAsync(b.RoomId);
+            foreach (var other in roomBookings)
             {
-                b.Status = "Confirmed";
-                await _repo.SaveAsync();
+                if (other.Id == b.Id || other.Status != "Confirmed")
+                    continue;
+                if (b.CheckIn < other.CheckOut && b.CheckOut > other.CheckIn)
+                    return;
             }
+
+            b.Status = "Confirmed";
+            await _repo.SaveAsync();
+
         }
 
-        public async Task RejectBookingAsync(int bookingId)
+        public async Task RejectBookingAsync(int bookingId, int hotelId)
         {
-            var b = await _repo.GetBookingByIdAsync(bookingId);
-            if (b != null)
-            {
-                b.Status = "Cancelled";
-                await _repo.SaveAsync();
-            }
+            var b = await _repo.GetBookingByIdWithRoomAsync(bookingId);
+            if (b == null || b.Room.HotelId != hotelId || b.Status != "Pending")
+                return;
+
+            b.Status = "Cancelled";
+            await _repo.SaveAsync();
+
         }
 
-        public async Task CompleteBookingAsync(int bookingId)
+        public async Task CompleteBookingAsync(int bookingId, int hotelId)
         {
-            var b = await _repo.GetBookingByIdAsync(bookingId);
-            if (b != null)
-            {
-                b.Status = "Completed";
-                await _repo.SaveAsync();
-            }
+            var b = await _repo.GetBookingByIdWithRoomAsync(bookingId);
+            if (b == null || b.Room.HotelId != hotelId || b.Status != "Confirmed")
+                return;
+
+            b.Status = "Completed";
+            await _repo.SaveAsync();
+
         }
     }
-
-
 }

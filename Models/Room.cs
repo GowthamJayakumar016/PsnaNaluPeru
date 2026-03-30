@@ -13,6 +13,8 @@ namespace Happy.Models
 
         public string Type { get; set; }
 
+        public string Amenities { get; set; }
+
         public decimal Price { get; set; }
 
         public int Capacity { get; set; }

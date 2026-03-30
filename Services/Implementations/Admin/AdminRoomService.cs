@@ -27,6 +27,7 @@ namespace Happy.Services.Implementations.Admin
                     Id = r.Id,
                     RoomNumber = r.RoomNumber,
                     Type = r.Type,
+                    Amenities = r.Amenities,
                     Price = r.Price,
                     Capacity = r.Capacity,
                     IsActive = r.IsActive

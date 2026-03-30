@@ -1,25 +1,20 @@
-@model Happy.DTOs.Booking.CreateBookingDto
+@model Happy.DTOs.Hotel.HotelViewDto
 
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <div class="card shadow">
-            <div class="card-body">
-                <h4 class="mb-3">Book Room</h4>
+<div class="mb-3">
+    <a href="/Hotel/Index" class="text-decoration-none">← Hotels</a>
+</div>
 
-                <form method="post">
-                    <input type="hidden" name="RoomId" value="@Model.RoomId" />
-
-                    <label>Check In</label>
-                    <input class="form-control mb-3" name="CheckIn" type="date" />
-
-                    <label>Check Out</label>
-                    <input class="form-control mb-3" name="CheckOut" type="date" />
-
-                    <button class="btn btn-primary w-100">Submit Booking</button>
-                </form>
-            </div>
-        </div>
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <h3 class="card-title">@Model.Name</h3>
+        <p class="text-muted mb-1">@Model.Location</p>
+        <p class="mb-0">@Model.Address</p>
     </div>
-    
+</div>
 
+<div class="d-grid gap-2 col-md-6">
+    <a class="btn btn-success btn-lg"
+       href="/Room/List?hotelId=@Model.Id&category=@Context.Request.Query["category"]&minPrice=@Context.Request.Query["minPrice"]&maxPrice=@Context.Request.Query["maxPrice"]&amenities=@Context.Request.Query["amenities"]">
+        View rooms & book
+    </a>
 </div>
